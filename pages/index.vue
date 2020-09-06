@@ -1,6 +1,7 @@
 <template>
   <div class="container">
     <div>
+      <SignIn />
       <Logo />
       <h1 class="title">kght6123.tasks</h1>
       <div class="links">

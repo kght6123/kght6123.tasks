@@ -1,5 +1,21 @@
 <template>
-  <div id="firebaseui-auth-container" ref="firebaseui-auth-container"></div>
+  <div>
+    <div
+      v-show="isLogin === false"
+      class="flex-center-center"
+      style="width: 100vw; height: 100vh"
+    >
+      <div id="firebaseui-auth-container" ref="firebaseui-auth-container"></div>
+    </div>
+    <div v-if="isLogin !== false" class="p-2">
+      <button
+        class="bg-gray-800 text-gray-100 p-2 rounded-lg w-full"
+        @click="logout"
+      >
+        Logout
+      </button>
+    </div>
+  </div>
 </template>
 
 <script lang="ts">
@@ -9,6 +25,11 @@ import 'firebase/auth'
 import 'firebaseui/dist/firebaseui.css'
 
 export default Vue.extend({
+  data() {
+    return {
+      isLogin: false,
+    }
+  },
   async created(): Promise<void> {
     // eslint-disable-next-line promise/param-names
     const fbUser: firebase.User | null = await new Promise(
@@ -34,9 +55,15 @@ export default Vue.extend({
   methods: {
     onSignIn(fbUser: firebase.User) {
       console.log(`login!!!`, fbUser)
+      this.isLogin = true
     },
     onSignOut() {
       console.log(`logout`)
+      this.isLogin = false
+    },
+    async logout() {
+      await firebase.auth().signOut()
+      window.location.reload(true)
     },
     shownModal() {
       const firebaseui = require('firebaseui')
@@ -47,10 +74,10 @@ export default Vue.extend({
         signInFlow: 'popup',
         // 利用する認証機能
         signInOptions: [
-          // google
+          // Google
           firebase.auth.GoogleAuthProvider.PROVIDER_ID,
           // Twitter
-          firebase.auth.TwitterAuthProvider.PROVIDER_ID,
+          // firebase.auth.TwitterAuthProvider.PROVIDER_ID,
           // Github
           firebase.auth.GithubAuthProvider.PROVIDER_ID,
         ],

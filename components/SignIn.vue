@@ -56,6 +56,10 @@ export default Vue.extend({
     onSignIn(fbUser: firebase.User) {
       console.log(`login!!!`, fbUser)
       this.isLogin = true
+      this.$firestore.collection('users').doc(fbUser.uid).set({
+        fbid: fbUser.uid,
+        lastLoginAt: this.$firestoreServerTimestamp,
+      })
     },
     onSignOut() {
       console.log(`logout`)

@@ -21,6 +21,7 @@
 <script lang="ts">
 import Vue from 'vue'
 import * as firebase from 'firebase/app'
+import { getters, RootState } from '~/store'
 import 'firebase/auth'
 import 'firebaseui/dist/firebaseui.css'
 
@@ -29,6 +30,14 @@ export default Vue.extend({
     return {
       isLogin: false,
     }
+  },
+  computed: {
+    myThings: {
+      get(): any[] {
+        return (this.$store.state as RootState).things
+      },
+      /* set(value: any): void {}, */
+    },
   },
   async created(): Promise<void> {
     // eslint-disable-next-line promise/param-names
@@ -48,9 +57,11 @@ export default Vue.extend({
     this.$nextTick(() => {
       setTimeout(() => {
         // this.$nuxt.$loading.finish()
-        this.shownModal()
-      }, 1000)
+        this.showFirebaseUI()
+      }, 250)
     })
+    const name = this.$store.getters.name as ReturnType<typeof getters.name>
+    console.log(name)
   },
   methods: {
     onSignIn(fbUser: firebase.User) {
@@ -69,7 +80,7 @@ export default Vue.extend({
       await firebase.auth().signOut()
       window.location.reload(true)
     },
-    shownModal() {
+    showFirebaseUI() {
       const firebaseui = require('firebaseui')
       const uiConfig = {
         // ログイン完了時のリダイレクト先

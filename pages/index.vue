@@ -1,6 +1,7 @@
 <template>
   <div>
     <SignIn />
+    <BurnerList />
   </div>
 </template>
 
